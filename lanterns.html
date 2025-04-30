@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Night Sky Lanterns</title>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                height: 100vh;
+                overflow: hidden;
+                background: linear-gradient(to bottom, #1b0624 0%, #1b1b55 100%);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .scene {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+            }
+            .star {
+                position: absolute;
+                background: #faf7ee;
+                border-radius: 50%;
+                animation: twinkle var(--duration) infinite ease-in-out;
+            }
+            @keyframes twinkle {
+                0%, 100% { 
+                    opacity: 0.2;
+                    transform: scale(0.8);
+                }
+                50% { 
+                    opacity: 1;
+                    transform: scale(1.2);
+                }
+            }
+            .moon {
+                position: absolute;
+                top: 10%;
+                right: 15%;
+                width: 120px;
+                height: 120px;
+                background: #fcefa8;
+                border-radius: 50%;
+                box-shadow: 0 0 50px #faea91, 0 0 100px rgba(255, 235, 120, 0.8);
+            }
+            .lantern {
+                position: absolute;
+                width: 100px;
+                height: 140px;
+                cursor: pointer;
+                transition: opacity 0.5s ease;
+                opacity: 0;
+                transform-origin: center bottom;
+            }
+            .lantern-body {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background: var(--lantern-color, rgba(255, 170, 60, 0.95));
+                border-radius: 12px;
+                box-shadow: 
+                    inset 0 -30px 30px rgba(255, 140, 40, 0.2),
+                    inset 0 30px 30px rgba(255, 220, 100, 0.2),
+                    0 0 30px var(--glow-color, rgba(255, 170, 60, 0.8)),
+                    0 0 60px var(--glow-color, rgba(255, 170, 60, 0.4)),
+                    0 0 90px var(--glow-color, rgba(255, 170, 60, 0.2));
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                color: rgba(255, 255, 255, 0.95);
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-size: 16px;
+                line-height: 1.4;
+                padding: 20px;
+                opacity: 0;
+                transition: all 0.5s ease;
+            }
+            .lantern.show-message .lantern-body {
+                opacity: 1;
+                background: var(--lantern-color, rgba(255, 170, 60, 0.98));
+            }
+            .lantern.visible {
+                opacity: 1;
+                animation: gentle-float 6s ease-in-out infinite;
+            }
+            @keyframes gentle-float {
+                0%, 100% {
+                    transform: rotate(-1deg) translateY(0px);
+                }
+                25% {
+                    transform: rotate(0deg) translateY(-8px);
+                }
+                50% {
+                    transform: rotate(1deg) translateY(0px);
+                }
+                75% {
+                    transform: rotate(0deg) translateY(-8px);
+                }
+            }
+            .prev-page {
+                position: absolute;
+                bottom: 30px;
+                left: 50%;
+                transform: translateX(-50%);
+                color: #faf7ee;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                text-decoration: none;
+                font-size: 18px;
+                opacity: 0.7;
+                transition: opacity 0.3s ease;
+                text-shadow: 0 0 5px #fff;
+            }
+            .prev-page:hover {
+                opacity: 1;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="scene">
+            <div class="moon"></div>
+            <a href="the night.html" class="prev-page">← Back to Night Sky</a>
+        </div>
+        <script>
+            const scene = document.querySelector('.scene');
+            
+            // Create stars
+            for(let i = 0; i < 300; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                const size = Math.random() * 2 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = star.style.width;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.setProperty('--duration', `${Math.random() * 4 + 2}s`);
+                scene.appendChild(star);
+            }
+
+            // Messages for lanterns
+            const messages = [
+                "You are the most amazing in the world",
+                "Apke samne to sab kuch averaeg hi lagta hai",
+                "Your smile must be the brightest and prettiest",
+                "Keep smiling always",
+                "Always be happy"
+            ];
+
+            let currentLantern = null;
+            let currentIndex = 0;
+
+            function createLantern(message) {
+                const lantern = document.createElement('div');
+                lantern.classList.add('lantern');
+                
+                // Random color variations
+                const hue = Math.random() * 30 - 15;
+                const saturation = 80 + Math.random() * 20;
+                const lightness = 60 + Math.random() * 10;
+                const alpha = 0.95;
+                const color = `hsla(${35 + hue}, ${saturation}%, ${lightness}%, ${alpha})`;
+                const glowColor = `hsla(${35 + hue}, ${saturation}%, ${lightness}%, ${alpha * 0.8})`;
+                
+                lantern.style.setProperty('--lantern-color', color);
+                lantern.style.setProperty('--glow-color', glowColor);
+                
+                const lanternBody = document.createElement('div');
+                lanternBody.classList.add('lantern-body');
+                lanternBody.textContent = message;
+                
+                lantern.appendChild(lanternBody);
+                
+                // Random starting position
+                const startSide = Math.random() < 0.5 ? 'left' : 'right';
+                const startPos = Math.random() * 30 + 10;
+                lantern.style[startSide] = `${startPos}%`;
+                lantern.style.bottom = '5%';
+                
+                scene.appendChild(lantern);
+                
+                // Force reflow
+                lantern.offsetHeight;
+                
+                // Make visible
+                lantern.classList.add('visible');
+                
+                // Faster animation to center
+                setTimeout(() => {
+                    lantern.style.transition = 'all 2s ease-in-out';
+                    const centerOffset = (Math.random() * 20 - 10);
+                    lantern.style.left = `${50 + centerOffset}%`;
+                    lantern.style.bottom = '45%';
+                    
+                    // Show message sooner
+                    setTimeout(() => {
+                        lantern.classList.add('show-message');
+                    }, 2000);
+                }, 100);
+
+                // Faster exit animation
+                lantern.addEventListener('click', () => {
+                    const exitSide = Math.random() < 0.5 ? 'left' : 'right';
+                    const exitPos = exitSide === 'left' ? -20 : 120;
+                    
+                    lantern.style.transition = 'all 2s ease-in-out';
+                    lantern.style[exitSide] = `${exitPos}%`;
+                    lantern.style.bottom = '120%';
+                    
+                    setTimeout(() => {
+                        lantern.remove();
+                        if (currentIndex < messages.length) {
+                            launchNextLantern();
+                        }
+                    }, 2000);
+                });
+
+                return lantern;
+            }
+
+            function launchNextLantern() {
+                if (currentIndex < messages.length) {
+                    currentLantern = createLantern(messages[currentIndex]);
+                    currentIndex++;
+                }
+            }
+
+            // Start with first lantern
+            launchNextLantern();
+        </script>
+    </body>
+</html> 
