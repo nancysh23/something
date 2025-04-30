@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Night Sky</title>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                height: 100vh;
+                overflow: hidden;
+                background: linear-gradient(to bottom, #1b0624 0%, #1b1b55 100%);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .scene {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+            }
+            .star {
+                position: absolute;
+                background: #faf7ee;
+                border-radius: 50%;
+                animation: twinkle var(--duration) infinite ease-in-out;
+            }
+            @keyframes twinkle {
+                0%, 100% { 
+                    opacity: 0.2;
+                    transform: scale(0.8);
+                }
+                50% { 
+                    opacity: 1;
+                    transform: scale(1.2);
+                }
+            }
+            .moon {
+                position: absolute;
+                top: 10%;
+                right: 15%;
+                width: 120px;
+                height: 120px;
+                background: #fcefa8;
+                border-radius: 50%;
+                box-shadow: 0 0 50px #faea91, 0 0 100px rgba(255, 235, 120, 0.8);
+            }
+            .sky-message {
+                position: absolute;
+                top: 30%;
+                left: 50%;
+                transform: translateX(-50%);
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-size: 48px;
+                color: #f80b95;
+                text-align: center;
+                text-shadow: 
+                    0 0 7px #ec6bc6,
+                    0 0 10px #e078d3,
+                    0 0 21px #ff79ed,
+                    0 0 42px #eb75ba,
+                    0 0 82px #f075b8,
+                    0 0 92px #f572d9;
+                animation: message-glow 2s ease-in-out infinite alternate;
+                cursor: pointer;
+                text-decoration: none;
+            }
+            @keyframes message-glow {
+                from {
+                    opacity: 0.8;
+                    text-shadow: 
+                        0 0 7px #6e105f,
+                        0 0 10px #b33388,
+                        0 0 21px #922e71,
+                        0 0 42px #a12c6c,
+                        0 0 82px #af21a3,
+                        0 0 92px #a3168c;
+                }
+                to {
+                    opacity: 1;
+                    text-shadow: 
+                        0 0 10px #fcff51,
+                        0 0 20px #faf745,
+                        0 0 40px #e2ee3b,
+                        0 0 80px #eed548,
+                        0 0 160px #f8e470,
+                        0 0 200px #f1e07b;
+                }
+            }
+            .next-page {
+                position: absolute;
+                bottom: 30px;
+                left: 50%;
+                transform: translateX(-50%);
+                color: #faf7ee;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                text-decoration: none;
+                font-size: 18px;
+                opacity: 0.7;
+                transition: opacity 0.3s ease;
+                text-shadow: 0 0 5px #fff;
+            }
+            .next-page:hover {
+                opacity: 1;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="scene">
+            <div class="moon"></div>
+            <div class="sky-message">Hey Beautiful lady this is just for you</div>
+            <a href="lanterns.html" class="next-page">Release the Lanterns ✨</a>
+        </div>
+        <script>
+            const scene = document.querySelector('.scene');
+
+            // Create stars throughout the entire scene
+            for(let i = 0; i < 300; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                const size = Math.random() * 2 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = star.style.width;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`; // Now stars cover the full height
+                star.style.setProperty('--duration', `${Math.random() * 4 + 2}s`);
+                scene.appendChild(star);
+            }
+        </script>
+    </body>
+</html>
